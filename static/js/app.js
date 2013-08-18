@@ -26,6 +26,10 @@ function showEvent(event) {
     $("#event-viewer #title").html(event.get('name'));
     swfobject.embedSWF(event.get('url') + "?format=swf", "movie-container", "640", "480", "9.0.0");
     $("#event-viewer").modal('show');
+    window.router.navigate(window.baseUrl + "#" + event.get('id'));
+    $('#event-viewer').on('hidden', function () {
+        window.router.navigate(window.baseUrl);
+    });
 }
 
 var CamerasView = Backbone.View.extend({
@@ -62,7 +66,6 @@ var CameraView = Backbone.View.extend({
         }, this);
         return this;
     }
-
 });
 
 var AppRouter = Backbone.Router.extend({
@@ -75,6 +78,7 @@ var AppRouter = Backbone.Router.extend({
     },
     index: function() {
         var router = this;
+        window.baseUrl = '';
         $("#main").html('');
         this.cameras = new Cameras();
         this.cameras.fetch({
@@ -89,6 +93,7 @@ var AppRouter = Backbone.Router.extend({
     },
     camera: function(name) {
         $("#main").html('');
+        window.baseUrl = 'cameras/' + name;
         var camera = new Camera({
             name: name
         });
@@ -99,6 +104,11 @@ var AppRouter = Backbone.Router.extend({
                     el: $("#main")
                 });
                 view.render();
+                var hash = window.location.hash.replace("#", "");
+                if(hash) {
+                    var event = camera.get('events').get(hash);
+                    if(event) showEvent(event);
+                }
             }
         });
     }
