@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Monitor Viewer</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/app.css" rel="stylesheet">
+    {% raw %}
+    <script id='camera-list-item-template' type='text/x-handlebars-templates'>
+      <li><a href="/cameras/{{name}}">{{name}}</a></li>
+    </script>
+    <script id='events-list-item-template' type='text/x-handlebars-templates'>
+      <li><a href="#{{id}}">{{name}}</a></li>
+    </script>
+    {% endraw %}
+  </head>
+  <body>
+    <div class="modal hide fade" id="event-viewer">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+        <h3 id="title"></h3>
+      </div>
+      <div class="modal-body">
+        <div id='movie-container'>
+          Flash player missing?
+        </div>
+      </div>
+    </div>
+
+    <h1>Monitor Viewer</h1>
+    <div id="main">
+
+    </div>
+
+    <script src="/static/js/jquery.js"></script>
+    <script src="/static/js/underscore-min.js"></script>
+    <script src="/static/js/backbone-min.js"></script>
+    <script src="/static/js/handlebars.js"></script>
+    <script src="/static/js/bootstrap.min.js"></script>
+    <script src="/static/js/swfobject.js"></script>
+    <script src="/static/js/app.js"></script>
+    <script>
+      $(function() {
+        window.router = new AppRouter;
+        Backbone.history.start({pushState: true});
+      });
+    </script>
+  </body>
+</html>
