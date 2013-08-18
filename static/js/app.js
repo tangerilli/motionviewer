@@ -35,8 +35,10 @@ function showEvent(event) {
 var CamerasView = Backbone.View.extend({
     initialize: function() {
         this.itemTemplate = Handlebars.compile($('#camera-list-item-template').html());
+        this.listenTo(this.collection, 'change reset add remove', this.render);
     },
     render: function() {
+        this.$el.html('<h2>Available Cameras</h2>');
         this.$el.append("<ul id='camera-list'></ul>");
         this.collection.each(function(camera) {
             this.$("#camera-list").append(this.itemTemplate(camera.toJSON()));
@@ -68,28 +70,57 @@ var CameraView = Backbone.View.extend({
     }
 });
 
+var MenuView = Backbone.View.extend({
+    initialize: function() {
+        this.itemTemplate = Handlebars.compile($('#menu-list-item-template').html());
+        this.listenTo(this.collection, 'change reset add remove', this.render);
+        // Bind to router change events so we can update the active class on the current
+        // camera entry
+        Backbone.history.on("all", this.render, this);
+    },
+    render: function() {
+        this.$("#camera-list").html('');
+        this.collection.each(function(camera) {
+            var link = $(this.itemTemplate(camera.toJSON()));
+            if(document.URL.indexOf(camera.get('name')) != -1) {
+                link.addClass('active');
+            }
+            this.$("#camera-list").append(link);
+        }, this);
+        this.$("a").click(function() {
+            var url = $(this).attr('href');
+            window.router.navigate(url, {trigger:true});
+            return false;
+        });
+        return this;
+    }
+});
+
 var AppRouter = Backbone.Router.extend({
     routes: {
         "":"index",
         "cameras/:name":"camera"
     },
     initialize: function() {
-
-    },
-    index: function() {
-        var router = this;
-        window.baseUrl = '';
-        $("#main").html('');
         this.cameras = new Cameras();
+        this.menuView = new MenuView({
+            el: $("div.navbar"),
+            collection: this.cameras
+        });
         this.cameras.fetch({
             success: function() {
-                var view = new CamerasView({
-                    collection: router.cameras,
-                    el: $("#main")
-                });
-                view.render();
+                window.router.menuView.render();
             }
         });
+    },
+    index: function() {
+        window.baseUrl = '';
+        $("#main").html('');
+        var view = new CamerasView({
+            collection: window.router.cameras,
+            el: $("#main")
+        });
+        view.render();
     },
     camera: function(name) {
         $("#main").html('');
