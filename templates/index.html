@@ -4,6 +4,7 @@
     <title>Monitor Viewer</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="/static/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/timeline.css" rel="stylesheet">
     <link href="/static/css/app.css" rel="stylesheet">
     {% raw %}
     <script id='camera-list-item-template' type='text/x-handlebars-templates'>
@@ -13,7 +14,7 @@
       <li><a href="/cameras/{{name}}">{{name}}</a></li>
     </script>
     <script id='events-list-item-template' type='text/x-handlebars-templates'>
-      <li><a href="#{{id}}">{{name}}</a></li>
+      <a href="#{{id}}" event-id="{{id}}">{{name}}</a>
     </script>
     {% endraw %}
   </head>
@@ -59,6 +60,7 @@
     <script src="/static/js/handlebars.js"></script>
     <script src="/static/js/bootstrap.min.js"></script>
     <script src="/static/js/swfobject.js"></script>
+    <script src="/static/js/timeline-min.js"></script>
     <script src="/static/js/app.js"></script>
     <script>
       $(function() {

@@ -41,13 +41,15 @@ def _update_events(name):
             id = datestr
             datestr, _ = datestr.split("-")
             date = datetime.datetime.strptime(datestr, "%Y%m%d%H%M%S")
+            t = date.timetuple()
+            timestamp = {"year":t.tm_year, "month":t.tm_mon, "day":t.tm_mday, "hour":t.tm_hour, "min":t.tm_min, "sec":t.tm_sec}
             event_name = date.strftime("%c")
         except Exception as e:
             print "Error parsing %s" % item.name
             continue
 
         url = '/api/cameras/%s/events/%s' % (name, id)
-        events.append({'name':event_name, 'url':url, 'id':id})
+        events.append({'name':event_name, 'url':url, 'id':id, 'timestamp':timestamp})
     mc.set(str('camera_events_%s' % name), events, settings.EVENTS_TIMEOUT)
     return events
 

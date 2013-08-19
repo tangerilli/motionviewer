@@ -57,15 +57,29 @@ var CameraView = Backbone.View.extend({
         this.itemTemplate = Handlebars.compile($('#events-list-item-template').html());
     },
     render: function() {
-        this.$el.append("<ul id='events-list'></ul>");
+        this.$el.html('');
+        this.$el.append("<div id='events-timeline'></div>");
+        var data = [];
         this.model.get('events').each(function(event) {
-            var link = $(this.itemTemplate(event.toJSON()));
-            this.$("#events-list").append(link);
-            link.click(function() {
-                showEvent(event);
-                return false;
+            var t = event.get('timestamp');
+            var timestamp = new Date(Date.UTC(t.year, t.month-1, t.day, t.hour, t.min, t.sec, 0)); 
+            data.push({
+                'start': timestamp,
+                'content': this.itemTemplate(event.toJSON())
             });
         }, this);
+
+        var timeline = new links.Timeline(document.getElementById('events-timeline'));
+        timeline.draw(data, {
+            'style':'box'
+        });
+        var view = this;
+        this.$("a").click(function() {
+            var event_id = $(this).attr('event-id');
+            var event = view.model.get('events').get(event_id);
+            showEvent(event);
+            return false;
+        });
         return this;
     }
 });
