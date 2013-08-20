@@ -118,7 +118,7 @@ var AppRouter = Backbone.Router.extend({
     initialize: function() {
         this.cameras = new Cameras();
         this.menuView = new MenuView({
-            el: $("div.navbar"),
+            el: $("div.navbar-fixed-top"),
             collection: this.cameras
         });
         this.cameras.fetch({

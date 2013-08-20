@@ -6,3 +6,11 @@ div.modal {
 body {
     padding-top: 60px; /* 60px to make the container go all the way to the bottom of the topbar */
 }
+
+div.navbar-fixed-bottom div.navbar-inner {
+    min-height: 34px;
+}
+
+a.credit {
+    margin-right: 5px;
+}
